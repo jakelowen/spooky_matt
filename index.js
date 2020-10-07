@@ -1,9 +1,11 @@
 const http = require("http");
 const express = require("express");
+const { urlencoded } = require("body-parser");
 const axios = require("axios");
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
 
 const app = express();
+app.use(urlencoded({ extended: false }));
 
 app.post("/sms", (req, res) => {
   // Access the message body and the number it was sent from.
