@@ -8,9 +8,7 @@ const app = express();
 app.post("/sms", (req, res) => {
   // post
   axios
-    .post(
-      "https://maker.ifttt.com/trigger/twilio_message_received/with/key/cEfexBfvpjAknWme7uscR"
-    )
+    .post(process.env.IFTTT_WEBHOOK)
     .then((res) => {
       console.log(`statusCode: ${res.statusCode}`);
     })
@@ -21,7 +19,7 @@ app.post("/sms", (req, res) => {
   // formulate message
   const twiml = new MessagingResponse();
 
-  twiml.message("The Robots are coming! Head for the hills!");
+  twiml.message(process.env.MESSAGE_RESPONSE);
 
   res.writeHead(200, { "Content-Type": "text/xml" });
   res.end(twiml.toString());
