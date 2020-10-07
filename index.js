@@ -12,13 +12,13 @@ app.post("/sms", (req, res) => {
   console.log(`Incoming message from ${req.body.From}: ${req.body.Body}`);
 
   const url = `https://maker.ifttt.com/trigger/${process.env.IFTTT_EVENT_NAME}/with/key/${process.env.IFTTT_WEBHOOK_KEY}`;
-  //   console.log({ url });
+  console.log(url);
 
   // post
   axios
     .post(url)
-    .then((res) => {
-      console.log(`statusCode: ${res.statusCode}`);
+    .then((response) => {
+      console.log(`statusCode: ${response.statusCode}`);
     })
     .catch((error) => {
       console.error(error);
