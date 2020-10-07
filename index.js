@@ -8,15 +8,15 @@ const app = express();
 app.post("/sms", (req, res) => {
   const url = `https://maker.ifttt.com/trigger/${process.env.IFTTT_EVENT_NAME}/with/key/${process.env.IFTTT_WEBHOOK_KEY}`;
   console.log({ url });
-  // post
-  axios
-    .post(url)
-    .then((res) => {
-      console.log(`statusCode: ${res.statusCode}`);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  //   // post
+  //   axios
+  //     .post(url)
+  //     .then((res) => {
+  //       console.log(`statusCode: ${res.statusCode}`);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
 
   // formulate message
   const twiml = new MessagingResponse();
