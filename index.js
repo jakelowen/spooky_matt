@@ -11,11 +11,20 @@ app.use(session({secret: process.env.SESSION_SECRET}));
 app.use(urlencoded({ extended: false }));
 
 app.post("/sms", (req, res) => {
+  const twiml = new MessagingResponse();
   // Access the message body and the number it was sent from.
- 
-  // just for debugging 
-  console.log(`Incoming message from ${req.body.From}: ${req.body.Body}. Session: ${JSON.stringify(req.session, null, 4)}`);
   
+  // just for debugging 
+  const body = req.body.Body.toUpperCase() // coerce body to uppercase
+  console.log(`Incoming message from ${req.body.From}: ${body}. Session: ${JSON.stringify(req.session, null, 4)}`);
+  
+  if(body === "NUKE") {
+    req.session.firstResponseSent = null
+    req.session.registered = null
+    twiml.message("flow reset");
+    res.writeHead(200, { "Content-Type": "text/xml" });
+    res.end(twiml.toString());
+  }
 
   // start message
   let messageText = ""
@@ -44,7 +53,7 @@ app.post("/sms", (req, res) => {
 
   } else if (req.session.registered !== true) { // only here if initiated, but not yet answered registration question
 
-    const body = req.body.Body.toUpperCase() // coerce body to uppercase
+    
 
     if (body.includes("Y") || body.includes("YES")) { // check if body includes affirmation
       messageText += "Great! Thanks for being a voter like us! Election Day is coming fast, so please make your plan to vote at IWillVote.com."
@@ -62,9 +71,8 @@ app.post("/sms", (req, res) => {
 
 
   // wrap it up
-  const twiml = new MessagingResponse();
+  
   twiml.message(messageText);
-  // req.session = userSession
   res.writeHead(200, { "Content-Type": "text/xml" });
   res.end(twiml.toString());
 });
