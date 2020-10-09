@@ -24,6 +24,7 @@ app.post("/sms", (req, res) => {
     twiml.message("flow reset");
     res.writeHead(200, { "Content-Type": "text/xml" });
     res.end(twiml.toString());
+    return
   }
 
   // start message
@@ -36,19 +37,18 @@ app.post("/sms", (req, res) => {
     req.session.firstResponseSent = true // mark as initiated
 
     // turn on lights!
-    // const url = `https://maker.ifttt.com/trigger/${process.env.IFTTT_EVENT_NAME}/with/key/${process.env.IFTTT_WEBHOOK_KEY}`;
-    // console.log(url);
+    const url = `https://maker.ifttt.com/trigger/${process.env.IFTTT_EVENT_NAME}/with/key/${process.env.IFTTT_WEBHOOK_KEY}`;
+    console.log(url);
 
-    // // post
-    // axios
-    //   .post(url)
-    //   .then((response) => {
-    //     console.log(`statusCode: ${response.statusCode}`);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-
+    // post
+    axios
+      .post(url)
+      .then((response) => {
+        console.log(`statusCode: ${response.statusCode}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
 
   } else if (req.session.registered !== true) { // only here if initiated, but not yet answered registration question
